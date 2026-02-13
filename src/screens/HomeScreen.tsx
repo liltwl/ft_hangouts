@@ -25,6 +25,7 @@ const HomeScreen = ({ strings, headerColor, navigate }: { strings: any; headerCo
             />
             {contacts.length === 0 ? (
                 <Text style={styles.empty}>{strings?.no_contacts || 'No contacts yet'}</Text>
+
             ) : (
                 <FlatList
                     data={contacts}
