@@ -18,6 +18,8 @@ const App = () => {
     const appState = useRef(AppState.currentState);
     const bgTimestamp = useRef(null);
 
+    console.log('App render, current screen:', screen, 'selectedContact:', selectedContact);
+
     useEffect(() => {
         LocaleModule.getStrings().then(setStrings).catch(() => { });
         console.log('App started, current locale strings:', strings, LocaleModule.getStrings()); // Debug log
