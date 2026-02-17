@@ -1,11 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { NativeModules } from 'react-native';
 import Header from '../components/Header';
 
 const { DatabaseModule } = NativeModules;
 
-const ContactDetailScreen = ({ strings, headerColor, navigate, selectedContact }: { strings: any; headerColor: any; navigate: any; selectedContact: any }) => {
+const ContactDetailScreen = ({
+    strings,
+    headerColor,
+    navigate,
+    selectedContact
+}: { strings: any; headerColor: string; navigate: any; selectedContact: any }) => {
     const c = selectedContact;
 
     const confirmDelete = () => {
@@ -15,7 +20,9 @@ const ContactDetailScreen = ({ strings, headerColor, navigate, selectedContact }
             [
                 { text: strings.cancel || 'Cancel', style: 'cancel' },
                 {
-                    text: strings.delete_contact || 'Delete', style: 'destructive', onPress: async () => {
+                    text: strings.delete_contact || 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
                         await DatabaseModule.deleteContact(c.id);
                         navigate('home');
                     }
@@ -24,39 +31,89 @@ const ContactDetailScreen = ({ strings, headerColor, navigate, selectedContact }
         );
     };
 
-    const row = (label, value) => (
+    const row = (label: string, value: string) => (
         <View style={styles.row}>
             <Text style={styles.label}>{label}</Text>
-            <Text style={styles.value}>{value || '—'}</Text>
+            <View style={styles.valueWrapper}>
+                <Text style={styles.value}>{value || '—'}</Text>
+            </View>
         </View>
     );
 
+    const ActionButton = ({ title, color, onPress }: { title: string; color: string; onPress: () => void }) => (
+        <TouchableOpacity
+            style={[styles.button, { backgroundColor: color }]}
+            onPress={onPress}
+            activeOpacity={0.8}
+        >
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+
     return (
-        <View style={styles.container}>
-            <Header title={`${c.firstName} ${c.lastName}`} color={headerColor} onBack={() => navigate('home')} />
-            <View style={styles.body}>
+        <View style={[styles.container, { backgroundColor: '#0F172A' }]}>
+            <Header
+                title={`${c.firstName} ${c.lastName}`}
+                color={headerColor}
+                onBack={() => navigate('home')}
+            />
+            <ScrollView contentContainerStyle={styles.body}>
                 {row(strings.first_name || 'First Name', c.firstName)}
                 {row(strings.last_name || 'Last Name', c.lastName)}
                 {row(strings.phone || 'Phone', c.phone)}
                 {row(strings.email || 'Email', c.email)}
                 {row(strings.address || 'Address', c.address)}
+
                 <View style={styles.actions}>
-                    <Button title={strings.edit_contact || 'Edit'} onPress={() => navigate('edit', c)} color={headerColor} />
-                    <Button title={strings.messages || 'Messages'} onPress={() => navigate('conversation', c)} color="#4CAF50" />
-                    <Button title={strings.delete_contact || 'Delete'} onPress={confirmDelete} color="#e74c3c" />
+                    <ActionButton
+                        title={strings.edit_contact || 'Edit'}
+                        color={headerColor}
+                        onPress={() => navigate('edit', c)}
+                    />
+                    <ActionButton
+                        title={strings.messages || 'Messages'}
+                        color="#4CAF50"
+                        onPress={() => navigate('conversation', c)}
+                    />
+                    <ActionButton
+                        title={strings.delete_contact || 'Delete'}
+                        color="#e74c3c"
+                        onPress={confirmDelete}
+                    />
                 </View>
-            </View>
+            </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
-    body: { padding: 20 },
-    row: { marginBottom: 16 },
-    label: { fontSize: 13, color: '#888', marginBottom: 2 },
-    value: { fontSize: 17 },
-    actions: { marginTop: 30, gap: 12 },
+    container: { flex: 1 },
+    body: { padding: 24 },
+    row: {
+        marginBottom: 16,
+        padding: 16,
+        borderRadius: 14,
+        backgroundColor: '#1E293B',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    label: { fontSize: 13, color: '#94A3B8', marginBottom: 4 },
+    valueWrapper: {},
+    value: { fontSize: 16, color: '#F1F5F9' },
+    actions: {
+        marginTop: 30,
+        flexDirection: 'column',
+        gap: 12,
+    },
+    button: {
+        paddingVertical: 14,
+        borderRadius: 25,
+        alignItems: 'center',
+    },
+    buttonText: { color: '#F1F5F9', fontSize: 16, fontWeight: '600' },
 });
 
 export default ContactDetailScreen;

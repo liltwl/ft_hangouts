@@ -15,38 +15,53 @@ const App = () => {
     const [selectedContact, setSelectedContact] = useState(null);
     const [headerColor, setHeaderColor] = useState('#4A90D9');
     const [strings, setStrings] = useState({});
+    const [currentLang, setCurrentLang] = useState('en');
     const appState = useRef(AppState.currentState);
     const bgTimestamp = useRef(null);
 
-    console.log('App render, current screen:', screen, 'selectedContact:', selectedContact);
 
+    // Listen for language changes from native side
     useEffect(() => {
-        LocaleModule.getStrings().then(setStrings).catch(() => { });
-        console.log('App started, current locale strings:', strings, LocaleModule.getStrings()); // Debug log
-    }, []);
+        const stringss = LocaleModule.getStrings(currentLang)
+            .then((s) => {
+                setStrings(s);
+                return s;
+            })
+            .catch(() => { });
+    }, [currentLang]);
 
-    // useEffect(() => {
-    //     const sub = AppState.addEventListener('change', nextState => {
-    //         if (nextState === 'background' || nextState === 'inactive') {
-    //             bgTimestamp.current = new Date().toLocaleString();
-    //         }
-    //         if (appState.current.match(/background|inactive/) && nextState === 'active') {
-    //             if (bgTimestamp.current) {
-    //                 const msg = (strings.app_background || 'App went to background at: %s').replace('%s', bgTimestamp.current);
-    //                 ToastAndroid.show(msg, ToastAndroid.LONG);
-    //             }
-    //         }
-    //         appState.current = nextState;
-    //     });
-    //     return () => sub.remove();
-    // }, [strings]);
+
+    // Listen for app state changes to track background time
+    useEffect(() => {
+        const sub = AppState.addEventListener('change', nextState => {
+            if (nextState === 'background' || nextState === 'inactive') {
+                bgTimestamp.current = new Date().toLocaleString();
+            }
+            if (appState.current.match(/background|inactive/) && nextState === 'active') {
+                if (bgTimestamp.current) {
+                    const msg = (strings.app_background || 'App went to background at: %s').replace('%s', bgTimestamp.current);
+                    ToastAndroid.show(msg, ToastAndroid.LONG);
+                }
+            }
+            appState.current = nextState;
+        });
+        return () => sub.remove();
+    }, []);
 
     const navigate = (s, contact) => {
         setSelectedContact(contact || null);
         setScreen(s);
     };
 
-    const props = { strings, headerColor, navigate, selectedContact, setHeaderColor };
+    const props = {
+        strings,
+        headerColor,
+        navigate,
+        selectedContact,
+        setHeaderColor,
+        currentLang,
+        setLanguage: setCurrentLang
+    };
 
     switch (screen) {
         case 'add': return <AddContactScreen {...props} />;
