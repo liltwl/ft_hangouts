@@ -1,7 +1,7 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
- *
+ * https://tvplanetshow.com/24h-premium-subscription/
  * @format
  */
 
