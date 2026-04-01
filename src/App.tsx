@@ -32,6 +32,7 @@ const App = () => {
 
 
     // Listen for app state changes to track background time
+
     useEffect(() => {
         const sub = AppState.addEventListener('change', nextState => {
             if (nextState === 'background' || nextState === 'inactive') {
