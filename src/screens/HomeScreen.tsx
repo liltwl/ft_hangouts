@@ -42,7 +42,7 @@ const HomeScreen = ({ strings, headerColor, navigate }: { strings: any; headerCo
         <View style={[styles.container, { backgroundColor: '#0F172A' }]}>
             <StatusBar backgroundColor={headerColor} barStyle="light-content" />
             <Header
-                title={strings?.home || 'Homeeee'}
+                title={strings?.home || 'Home'}
                 color={headerColor}
                 onRight={() => navigate('settings')}
                 rightIcon="settings"

@@ -3,7 +3,6 @@ import {
     View, Text, TextInput, FlatList,
     TouchableOpacity, StyleSheet, NativeModules, NativeEventEmitter, Platform, StatusBar
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // or FontAwesome, Ionicons, etc.
 import Header from '../components/Header';
 
 const { DatabaseModule, SmsModule } = NativeModules;
@@ -11,7 +10,7 @@ const { DatabaseModule, SmsModule } = NativeModules;
 const ChatHeader = ({ contact, headerColor, onBack, strings }: any) => (
     <View style={[styles.header, { backgroundColor: headerColor, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 8 : 40 }]}>
         <TouchableOpacity onPress={onBack} style={styles.backBtnContainer} activeOpacity={0.7}>
-            <Icon name="arrow-back" size={24} color="#F1F5F9" />
+            <Text style={styles.iconText}>←</Text>
             <Text style={styles.backText}>{strings.back || 'Back'}</Text>
         </TouchableOpacity>
         <Text style={styles.title}>{contact?.firstName} {contact?.lastName}</Text>
@@ -117,6 +116,10 @@ const styles = StyleSheet.create({
         color: '#F1F5F9',
         fontSize: 16,
         marginLeft: 4,
+    },
+    iconText: {
+        color: '#F1F5F9',
+        fontSize: 18,
     },
     title: {
         flex: 1,

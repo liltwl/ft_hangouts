@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Platform, StatusBar, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // or FontAwesome, Ionicons, etc.
 
 const Header = ({ title, color, onBack, onRight, rightIcon }: {
     title: string;
@@ -13,7 +12,7 @@ const Header = ({ title, color, onBack, onRight, rightIcon }: {
         <View style={[styles.header, { backgroundColor: color || '#2563EB' }]}>
             {onBack ? (
                 <TouchableOpacity onPress={onBack} style={styles.btn} activeOpacity={0.7}>
-                    <Icon name="arrow-back" size={24} color="#F1F5F9" />
+                    <Text style={styles.iconText}>←</Text>
                 </TouchableOpacity>
             ) : <View style={styles.btnPlaceholder} />}
 
@@ -21,7 +20,7 @@ const Header = ({ title, color, onBack, onRight, rightIcon }: {
 
             {onRight ? (
                 <TouchableOpacity onPress={onRight} style={styles.btn} activeOpacity={0.7}>
-                    <Icon name={rightIcon || "settings"} size={24} color="#F1F5F9" />
+                    <Text style={styles.iconText}>{rightIcon === 'settings' ? '⚙️' : '➡️'}</Text>
                 </TouchableOpacity>
             ) : <View style={styles.btnPlaceholder} />}
         </View>
@@ -50,6 +49,10 @@ const styles = StyleSheet.create({
     },
     btn: {
         padding: 8,
+    },
+    iconText: {
+        fontSize: 22,
+        color: '#F1F5F9',
     },
     btnPlaceholder: {
         width: 32,
